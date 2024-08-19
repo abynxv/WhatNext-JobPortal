@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Employer Profile{% endblock %}
+
+{% block content %}
+<section class="profile-section py-5">
+    <div class="container">
+        <h1 class="text-center mb-4">Employer Profile</h1>
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ profile.company_name }}</h4>
+                        <p class="card-text"><strong>Address:</strong> {{ profile.company_address }}</p>
+                        {% if profile.logo %}
+                            <img src="{{ profile.logo.url }}" alt="Company Logo" class="img-fluid">
+                        {% else %}
+                            <p>No logo uploaded</p>
+                        {% endif %}
+                        <a href="{% url 'jobs:employer-edit-profile' %}" class="btn btn-primary">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
