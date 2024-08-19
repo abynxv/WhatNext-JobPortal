@@ -78,10 +78,10 @@ The project consists of two main Django apps:
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-## Project Overview
+## Screenshots
 
-![Home Page Screenshot](![Project Image - 01](https://github.com/user-attachments/assets/cf7df1d4-6d27-4a9e-a8a4-e3e063930ed4))
-![Alt Text](![Project Image - 02](https://github.com/user-attachments/assets/d6886cca-fa58-42dc-9a0d-150aedde0ebd))
+(https://github.com/user-attachments/assets/cf7df1d4-6d27-4a9e-a8a4-e3e063930ed4)
+(https://github.com/user-attachments/assets/d6886cca-fa58-42dc-9a0d-150aedde0ebd)
 
 ## License
 
