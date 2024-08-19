@@ -1,6 +1,6 @@
 # What Next - Job Portal
 
->This project is under development and not yet final; ongoing testing, feature additions, and code adjustments are in progress.
+>This project is under development and not yet final; ongoing testing, feature additions, templates design and code adjustments are in progress 📈
 
 What Next is a job portal web application built with Django. It facilitates connections between employers and job seekers, allowing employers to post jobs and employees to apply for them.
 
