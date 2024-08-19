@@ -5,7 +5,7 @@ What Next is a job portal web application built with Django. It facilitates conn
 ## Features
 
 - User authentication (Employee and Employer signup/login)
-- Employer dashboard
+- Employee and Employer dashboard
 - Job posting and management for employers
 - Job search and application for employees
 - Profile management for both employers and employees
