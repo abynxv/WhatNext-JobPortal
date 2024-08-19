@@ -80,9 +80,9 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## Screenshots
 
-(https://github.com/user-attachments/assets/cf7df1d4-6d27-4a9e-a8a4-e3e063930ed4)
+![Home Page Screenshot](https://github.com/user-attachments/assets/cf7df1d4-6d27-4a9e-a8a4-e3e063930ed4)
 
-((https://github.com/user-attachments/assets/d6886cca-fa58-42dc-9a0d-150aedde0ebd))
+![Home Page Screenshot](https://github.com/user-attachments/assets/d6886cca-fa58-42dc-9a0d-150aedde0ebd)
 
 ## License
 
