@@ -82,9 +82,13 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## Screenshots
 
-![Home Page Screenshot](https://github.com/user-attachments/assets/cf7df1d4-6d27-4a9e-a8a4-e3e063930ed4)
-
-![Home Page Screenshot](https://github.com/user-attachments/assets/d6886cca-fa58-42dc-9a0d-150aedde0ebd)
+![Project Image - 01](https://github.com/user-attachments/assets/c8daedc8-c5cc-4b08-a4d6-ef41e0f3d485)
+![Project Image - 02](https://github.com/user-attachments/assets/a0c50537-405d-4ddf-a9e7-3d0878bf6ec7)
+![Project Image - 03](https://github.com/user-attachments/assets/e52b1e29-04c1-41a4-9a37-9c8d5055a607)
+![Project Image - 04](https://github.com/user-attachments/assets/99655554-8daf-4aaf-bc78-ad1ac5aded58)
+![Project Image - 05](https://github.com/user-attachments/assets/a62bd6aa-969e-4aac-be89-ba7db8e96364)
+![Project Image - 06](https://github.com/user-attachments/assets/7b02b012-f8d4-4bc3-9132-89b0f77332ef)
+![Project Image - 07](https://github.com/user-attachments/assets/6a136ae8-8710-4694-a378-0ed093464b0b)
 
 ## License
 
