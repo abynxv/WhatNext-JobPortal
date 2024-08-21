@@ -1,8 +1,10 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
-
+from django import forms
+from .models import User
 from accounts.models import User
+
 
 GENDER_CHOICES = (
     ('male', 'Male'),
@@ -84,7 +86,8 @@ class EmployerRegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(EmployerRegistrationForm, self).__init__(*args, **kwargs)
         self.fields['first_name'].label = "Company Name"
-        self.fields['last_name'].label = "Company Address"
+        self.fields['website'].label = "Website"
+        self.fields['address'].label = "Company Address"
         self.fields['password1'].label = "Password"
         self.fields['password2'].label = "Confirm Password"
 
@@ -93,7 +96,7 @@ class EmployerRegistrationForm(UserCreationForm):
                 'placeholder': 'Enter Company Name',
             }
         )
-        self.fields['last_name'].widget.attrs.update(
+        self.fields['address'].widget.attrs.update(
             {
                 'placeholder': 'Enter Company Address',
             }
@@ -101,6 +104,11 @@ class EmployerRegistrationForm(UserCreationForm):
         self.fields['email'].widget.attrs.update(
             {
                 'placeholder': 'Enter Email',
+            }
+        )
+        self.fields['website'].widget.attrs.update(
+            {
+                'placeholder': 'Enter Website URL',
             }
         )
         self.fields['password1'].widget.attrs.update(
@@ -121,16 +129,12 @@ class EmployerRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'password1', 'password2', 'logo']
+        fields = ['first_name', 'address', 'email', 'website', 'password1', 'password2', 'logo']
         error_messages = {
             'first_name': {
                 'required': 'First name is required',
                 'max_length': 'Name is too long'
             },
-            'last_name': {
-                'required': 'Last name is required',
-                'max_length': 'Last Name is too long'
-            }
         }
 
     def save(self, commit=True):
@@ -200,14 +204,16 @@ from .models import User
 class EmployerProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['role', 'gender', 'logo']
+        fields = ['first_name', 'last_name', 'email', 'logo']
         widgets = {
-            'role': forms.TextInput(attrs={'placeholder': 'Enter Role'}),
-            'gender': forms.Select(choices=GENDER_CHOICES),
+            'first_name': forms.TextInput(attrs={'placeholder': 'Enter Company Name'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Enter Company Address'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Enter Email'}),
             'logo': forms.ClearableFileInput(attrs={'placeholder': 'Upload Logo'}),
         }
         labels = {
-            'role': 'Role',
-            'gender': 'Gender',
-            'logo': 'Logo',
+            'first_name': 'Company Name',
+            'last_name': 'Company Address',
+            'email': 'Email',
+            'logo': 'Company Logo',
         }

@@ -13,7 +13,7 @@ JOB_TYPE = (
 class Job(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=300)
-    description = models.TextField()
+    description = models.CharField(max_length=150)
     location = models.CharField(max_length=150)
     type = models.CharField(choices=JOB_TYPE, max_length=10)
     category = models.CharField(max_length=100)

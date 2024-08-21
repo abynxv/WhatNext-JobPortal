@@ -18,6 +18,8 @@ class User(AbstractUser):
                                   'unique': "A user with that email already exists.",
                               })
     logo = models.ImageField(upload_to='img/logos', null=True, blank=True)
+    address = models.CharField(max_length=100, blank=True, null=True, default="")
+    website = models.CharField(max_length=100, blank=True, null=True, default="")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

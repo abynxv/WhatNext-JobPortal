@@ -6,7 +6,7 @@ from jobs.models import Job, Applicant
 class CreateJobForm(forms.ModelForm):
     class Meta:
         model = Job
-        exclude = ('user', 'created_at',)
+        exclude = ('user', 'created_at', 'company_name', 'company_description', 'website', 'filled')
 
     def is_valid(self):
         valid = super(CreateJobForm, self).is_valid()
