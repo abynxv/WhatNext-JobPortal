@@ -9,7 +9,10 @@ from jobs.models import Job, Applicant
 from django.views.generic import UpdateView, DeleteView, DetailView
 from accounts.models import User
 from django.shortcuts import get_object_or_404
-from accounts.forms import EmployerProfileForm
+from accounts.forms import *
+from accounts.models import *
+from django.http import Http404
+
 
 
 class DashboardView(ListView):
@@ -30,19 +33,27 @@ class ApplicantPerJobView(ListView):
     model = Applicant
     template_name = 'jobs/employer/applicants.html'
     context_object_name = 'applicants'
-    paginate_by = 1
+    paginate_by = 10
 
     @method_decorator(login_required(login_url=reverse_lazy('accounts:login')))
     @method_decorator(user_is_employer)
     def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(self.request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        return Applicant.objects.filter(job_id=self.kwargs['job_id']).order_by('id')
+        job_id = self.kwargs.get('job_id')
+        # Ensure the job exists and handle if it doesn't
+        if not Job.objects.filter(id=job_id).exists():
+            raise Http404("Job not found")
+        return Applicant.objects.filter(job_id=job_id).order_by('id')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['job'] = Job.objects.get(id=self.kwargs['job_id'])
+        job_id = self.kwargs.get('job_id')
+        # Ensure the job exists and handle if it doesn't
+        context['job'] = Job.objects.filter(id=job_id).first()
+        if context['job'] is None:
+            raise Http404("Job not found")
         return context
 
 
@@ -101,20 +112,18 @@ class JobDeleteView(DeleteView):
     def get_queryset(self):
         return Job.objects.filter(user_id=self.request.user.id)
 
-
-
 class ApplicantsListView(ListView):
     model = Applicant
     template_name = 'jobs/employer/all-applicants.html'
     context_object_name = 'applicants'
+    paginate_by = 10  # Adjust the number of items per page as needed
 
     def get_queryset(self):
-        # jobs = Job.objects.filter(user_id=self.request.user.id)
         return self.model.objects.filter(job__user_id=self.request.user.id)
     
 
 class EmployerProfileView(DetailView):
-    model = User
+    model = EmployerProfile
     template_name = 'jobs/employer/profile.html'
     context_object_name = 'profile'
 
@@ -122,8 +131,8 @@ class EmployerProfileView(DetailView):
         return get_object_or_404(User, email=self.request.user.email)
 
 class EmployerProfileEditView(UpdateView):
-    model = User
-    form_class = EmployerProfileForm  # Assuming you have a form for User model
+    model = EmployerProfile
+    form_class = EmployerProfileUpdateForm 
     template_name = 'jobs/employer/edit_profile.html'
     success_url = reverse_lazy('jobs:employer-profile')
 

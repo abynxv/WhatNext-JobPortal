@@ -6,11 +6,11 @@ app_name = "jobs"
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
-    path('search', SearchView.as_view(), name='searh'),
+    path('search', SearchView.as_view(), name='search'),
     path('employer/dashboard', include([
         path('', DashboardView.as_view(), name='employer-dashboard'),
         path('all-applicants', ApplicantsListView.as_view(), name='employer-all-applicants'),
-        path('applicants/<int:job_id>', ApplicantPerJobView.as_view(), name='employer-dashboard-applicants'),
+        path('applicants/<int:job_id>', ApplicantPerJobView.as_view(), name='employer-applicants'),
         path('mark-filled/<int:job_id>', filled, name='job-mark-filled'),
         path('edit/<int:pk>', JobEditView.as_view(), name='job-edit'),
         path('delete/<int:pk>', JobDeleteView.as_view(), name='job-delete'),

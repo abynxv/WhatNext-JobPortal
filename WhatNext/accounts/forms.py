@@ -2,164 +2,162 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import User
-from accounts.models import User
+from django.contrib.auth.forms import UserCreationForm
+from .models import CandidateProfile, EmployerProfile
+from django.contrib.auth import get_user_model
 
 
-GENDER_CHOICES = (
-    ('male', 'Male'),
-    ('female', 'Female'))
+User = get_user_model()
 
+class CandidateRegistrationForm(UserCreationForm):
+    email = forms.EmailField(
+        required=True, 
+        widget=forms.EmailInput(attrs={'placeholder': 'Enter Email Address'})
+    )
+    first_name = forms.CharField(
+        max_length=30, 
+        required=True, 
+        widget=forms.TextInput(attrs={'placeholder': 'Enter First Name'})
+    )
+    last_name = forms.CharField(
+        max_length=30, 
+        required=True, 
+        widget=forms.TextInput(attrs={'placeholder': 'Enter Last Name'})
+    )
+    gender = forms.ChoiceField(
+        choices=CandidateProfile.GENDER_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={'placeholder': 'Select Gender'})
+    )
+    qualification = forms.CharField(
+        max_length=255, 
+        required=False, 
+        widget=forms.TextInput(attrs={'placeholder': 'Enter Qualification'})
+    )
+    address = forms.CharField(
+        max_length=255, 
+        required=False, 
+        widget=forms.TextInput(attrs={'placeholder': 'Enter Address'})
+    )
+    resume = forms.FileField(
+        required=False, 
+        widget=forms.ClearableFileInput(attrs={'placeholder': 'Upload Resume'})
+    )
+    profile_pic = forms.ImageField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'})
+    )
 
-class EmployeeRegistrationForm(UserCreationForm):
-    # gender = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=GENDER_CHOICES)
+    class Meta:
+        model = User
+        fields = ['email', 'password1', 'password2']
+        error_messages = {
+            'email': {
+                'unique': 'A user with that email already exists.',
+            },
+        }
 
     def __init__(self, *args, **kwargs):
-        super(EmployeeRegistrationForm, self).__init__(*args, **kwargs)
-        self.fields['gender'].required = True
+        super(CandidateRegistrationForm, self).__init__(*args, **kwargs)
         self.fields['first_name'].label = "First Name"
         self.fields['last_name'].label = "Last Name"
+        self.fields['email'].label = "Email Address"
         self.fields['password1'].label = "Password"
         self.fields['password2'].label = "Confirm Password"
-
-        # self.fields['gender'].widget = forms.CheckboxInput()
-
-        self.fields['first_name'].widget.attrs.update(
-            {
-                'placeholder': 'Enter First Name',
-            }
-        )
-        self.fields['last_name'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['email'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Email',
-            }
-        )
-        self.fields['password1'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Password',
-            }
-        )
-        self.fields['password2'].widget.attrs.update(
-            {
-                'placeholder': 'Confirm Password',
-            }
-        )
-
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'email', 'password1', 'password2', 'gender']
-        error_messages = {
-            'first_name': {
-                'required': 'First name is required',
-                'max_length': 'Name is too long'
-            },
-            'last_name': {
-                'required': 'Last name is required',
-                'max_length': 'Last Name is too long'
-            },
-            'gender': {
-                'required': 'Gender is required'
-            }
-        }
-
-    def clean_gender(self):
-        gender = self.cleaned_data.get('gender')
-        if not gender:
-            raise forms.ValidationError("Gender is required")
-        return gender
+        
 
     def save(self, commit=True):
-        user = super(UserCreationForm, self).save(commit=False)
-        user.role = "employee"
+        user = super(CandidateRegistrationForm, self).save(commit=False)
+        user.role = "candidate"
         if commit:
             user.save()
+            CandidateProfile.objects.create(
+                user=user,
+                first_name=self.cleaned_data.get('first_name'),
+                last_name=self.cleaned_data.get('last_name'),
+                gender=self.cleaned_data.get('gender'),
+                qualification=self.cleaned_data.get('qualification'),
+                address=self.cleaned_data.get('address'),
+                resume=self.cleaned_data.get('resume'),
+                profile_pic=self.cleaned_data.get('profile_pic')
+            )
         return user
 
-
 class EmployerRegistrationForm(UserCreationForm):
-
-    def __init__(self, *args, **kwargs):
-        super(EmployerRegistrationForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].label = "Company Name"
-        self.fields['website'].label = "Website"
-        self.fields['address'].label = "Company Address"
-        self.fields['password1'].label = "Password"
-        self.fields['password2'].label = "Confirm Password"
-
-        self.fields['first_name'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Company Name',
-            }
-        )
-        self.fields['address'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Company Address',
-            }
-        )
-        self.fields['email'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Email',
-            }
-        )
-        self.fields['website'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Website URL',
-            }
-        )
-        self.fields['password1'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Password',
-            }
-        )
-        self.fields['password2'].widget.attrs.update(
-            {
-                'placeholder': 'Confirm Password',
-            }
-        )
-        self.fields['logo'].widget.attrs.update(
-            {
-                'placeholder': 'Upload Logo',
-            }
-        )
+    email = forms.EmailField(
+        required=True, 
+        widget=forms.EmailInput(attrs={'placeholder': 'Enter Email Address'})
+    )
+    company_name = forms.CharField(
+        max_length=255,
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Enter Company Name'})
+    )
+    company_address = forms.CharField(
+        max_length=255,
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Enter Company Address'})
+    )
+    website = forms.URLField(
+        max_length=255,
+        required=False,
+        widget=forms.URLInput(attrs={'placeholder': 'Enter Website URL'})
+    )
+    logo = forms.ImageField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'placeholder': 'Upload Company Logo'})
+    )
 
     class Meta:
         model = User
-        fields = ['first_name', 'address', 'email', 'website', 'password1', 'password2', 'logo']
+        fields = ['email', 'password1', 'password2', 'company_name', 'company_address', 'website', 'logo']
         error_messages = {
-            'first_name': {
-                'required': 'First name is required',
-                'max_length': 'Name is too long'
+            'email': {
+                'unique': 'A user with that email already exists.',
             },
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].label = "Email Address"
+        self.fields['password1'].label = "Password"
+        self.fields['password2'].label = "Confirm Password"
+        self.fields['company_name'].label = "Company Name"
+        self.fields['company_address'].label = "Company Address"
+        self.fields['website'].label = "Website"
+        self.fields['logo'].label = "Company Logo"
+
     def save(self, commit=True):
-        user = super(UserCreationForm, self).save(commit=False)
+        user = super().save(commit=False)
         user.role = "employer"
         if commit:
             user.save()
+            EmployerProfile.objects.create(
+                user=user,
+                company_name=self.cleaned_data.get('company_name'),
+                company_address=self.cleaned_data.get('company_address'),
+                website=self.cleaned_data.get('website'),
+                logo=self.cleaned_data.get('logo')
+            )
         return user
-
+    
 
 class UserLoginForm(forms.Form):
-    email = forms.EmailField()
+    email = forms.EmailField(
+        label="Email Address",
+        widget=forms.EmailInput(attrs={'placeholder': 'Enter Email Address'})
+    )
     password = forms.CharField(
         label="Password",
         strip=False,
-        widget=forms.PasswordInput,
+        widget=forms.PasswordInput(attrs={'placeholder': 'Enter Password'})
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = None
-        self.fields['email'].widget.attrs.update({'placeholder': 'Enter Email'})
-        self.fields['password'].widget.attrs.update({'placeholder': 'Enter Password'})
 
-    def clean(self, *args, **kwargs):
+    def clean(self):
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
 
@@ -167,53 +165,92 @@ class UserLoginForm(forms.Form):
             self.user = authenticate(email=email, password=password)
 
             if self.user is None:
-                raise forms.ValidationError("User Does Not Exist.")
+                raise forms.ValidationError("Invalid email or password.")
             if not self.user.check_password(password):
-                raise forms.ValidationError("Password Does not Match.")
+                raise forms.ValidationError("Incorrect password.")
             if not self.user.is_active:
-                raise forms.ValidationError("User is not Active.")
+                raise forms.ValidationError("Account is inactive.")
 
-        return super(UserLoginForm, self).clean(*args, **kwargs)
+        return super().clean()
 
     def get_user(self):
         return self.user
-
-
-class EmployeeProfileUpdateForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super(EmployeeProfileUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].widget.attrs.update(
-            {
-                'placeholder': 'Enter First Name',
-            }
-        )
-        self.fields['last_name'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
+    
+class CandidateProfileForm(forms.ModelForm):
 
     class Meta:
-        model = User
-        fields = ["first_name", "last_name", "gender"]
+        model = CandidateProfile
+        fields = ['gender', 'qualification', 'address', 'resume']
+        widgets = {
+            'gender': forms.Select(choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')]),
+            'qualification': forms.TextInput(attrs={'placeholder': 'Enter Qualification'}),
+            'address': forms.TextInput(attrs={'placeholder': 'Enter Address'}),
+            'resume': forms.ClearableFileInput(attrs={'placeholder': 'Upload Resume'}),
+        }
+        labels = {
+            'gender': 'Gender',
+            'qualification': 'Qualification',
+            'address': 'Address',
+            'resume': 'Resume',
+        }
 
-from django import forms
-from .models import User
+
+
+class CandidateProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CandidateProfile
+        fields = ['first_name', 'last_name', 'gender', 'qualification', 'address', 'resume']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'placeholder': 'Enter First Name'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Enter Last Name'}),
+            'gender': forms.Select(choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')]),
+            'qualification': forms.TextInput(attrs={'placeholder': 'Enter Qualification'}),
+            'address': forms.TextInput(attrs={'placeholder': 'Enter Address'}),
+            'resume': forms.FileInput(attrs={'class': 'form-control-file'}),  # Changed to FileInput
+        }
+        labels = {
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+            'gender': 'Gender',
+            'qualification': 'Qualification',
+            'address': 'Address',
+            'resume': 'Resume',
+        }
+
 
 class EmployerProfileForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'email', 'logo']
+        model = EmployerProfile
+        fields = ['company_name', 'company_address', 'website', 'logo']
         widgets = {
-            'first_name': forms.TextInput(attrs={'placeholder': 'Enter Company Name'}),
-            'last_name': forms.TextInput(attrs={'placeholder': 'Enter Company Address'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'Enter Email'}),
+            'company_name': forms.TextInput(attrs={'placeholder': 'Enter Company Name'}),
+            'company_address': forms.TextInput(attrs={'placeholder': 'Enter Company Address'}),
+            'website': forms.URLInput(attrs={'placeholder': 'Enter Website URL'}),
             'logo': forms.ClearableFileInput(attrs={'placeholder': 'Upload Logo'}),
         }
         labels = {
-            'first_name': 'Company Name',
-            'last_name': 'Company Address',
-            'email': 'Email',
+            'company_name': 'Company Name',
+            'company_address': 'Company Address',
+            'website': 'Website URL',
             'logo': 'Company Logo',
         }
+
+class EmployerProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = EmployerProfile
+        fields = ['company_name', 'company_address', 'website', 'logo']
+        widgets = {
+            'company_name': forms.TextInput(attrs={'placeholder': 'Enter Company Name'}),
+            'company_address': forms.TextInput(attrs={'placeholder': 'Enter Company Address'}),
+            'website': forms.URLInput(attrs={'placeholder': 'Enter Website URL'}),
+            'logo': forms.ClearableFileInput(attrs={'placeholder': 'Upload Logo'}),
+        }
+        labels = {
+            'company_name': 'Company Name',
+            'company_address': 'Company Address',
+            'website': 'Website URL',
+            'logo': 'Company Logo',
+        }
+
+
+

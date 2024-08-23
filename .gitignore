@@ -1,15 +1,114 @@
-# Virtual Environment
-venv/
-*.env
-
-# Database
-*.sqlite3
-
-# Migrations
-*/migrations/*
-!*/migrations/__init__.py
-
-# Python cache files
-*.pyc
-*.pyo
+# Python specific #
+###################
 __pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+*.eggs/
+*.manifest
+*.spec
+
+# Virtual Environment #
+########################
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Django specific #
+###################
+*.log
+*.pot
+*.pyc
+*.mo
+*.py~
+*.sqlite3
+*.db
+*.wsgi
+*.DS_Store
+*.env
+*.coverage
+.coverage.*
+celerybeat-schedule
+db.sqlite3
+# If using Celery with Django
+celerybeat-schedule
+celerybeat.pid
+celerybeat.db
+
+# Django Migrations #
+#####################
+**/migrations/*
+!**/migrations/__init__.py
+
+# Static and Media Files #
+##########################
+staticfiles/
+media/
+
+# Ignore IDE/editor settings #
+###############################
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Byte-compiled / optimized / DLL files #
+#########################################
+*.py[cod]
+
+# C extensions #
+################
+*.so
+
+# Distribution / packaging #
+############################
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs #
+##################
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports #
+################################
+htmlcov/
+.tox/
+.nox/
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# PyInstaller #
+#  Usually these files are written by a python script from a template #
+#  before PyInstaller builds the exe, so as to inject date/other infos into it. #
+########################################################################
+*.manifest
+*.spec
+
+# Cython debug symbols #
+########################
+cython_debug/

@@ -7,6 +7,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, CreateView
 from jobs.forms import ApplyJobForm
 from jobs.models import Job, Applicant
+from django.shortcuts import redirect
+from django.urls import reverse
 
 
 class HomeView(ListView):
@@ -23,14 +25,27 @@ class HomeView(ListView):
         return context
 
 
+from django.db.models import Q
+
+
 class SearchView(ListView):
     model = Job
     template_name = 'jobs/search.html'
     context_object_name = 'jobs'
+    paginate_by = 10  # Adjust the number of items per page as needed
 
     def get_queryset(self):
-        return self.model.objects.filter(location__contains=self.request.GET['location'],
-                                         title__contains=self.request.GET['position'])
+        position = self.request.GET.get('position', '')
+        location = self.request.GET.get('location', '')
+        
+        queryset = self.model.objects.all()
+        
+        if position:
+            queryset = queryset.filter(title__icontains=position)
+        if location:
+            queryset = queryset.filter(location__icontains=location)
+        
+        return queryset.order_by('-created_at')
 
 
 class JobListView(ListView):
@@ -49,17 +64,18 @@ class JobDetailsView(DetailView):
     pk_url_kwarg = 'id'
 
     def get_object(self, queryset=None):
-        obj = super(JobDetailsView, self).get_object(queryset=queryset)
-        if obj is None:
-            raise Http404("Job doesn't exists")
+        try:
+            obj = super().get_object(queryset=queryset)
+        except Job.DoesNotExist:
+            raise Http404("Job doesn't exist")
         return obj
 
     def get(self, request, *args, **kwargs):
         try:
             self.object = self.get_object()
         except Http404:
-            # redirect here
-            raise Http404("Job doesn't exists")
+            # Redirect to a different view or page if job doesn't exist
+            return redirect(reverse('jobs:job-list'))  # Replace 'jobs:job-list' with your URL name
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
@@ -84,12 +100,6 @@ class ApplyJobView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('jobs:jobs-detail', kwargs={'id': self.kwargs['job_id']})
-
-    # def get_form_kwargs(self):
-    #     kwargs = super(ApplyJobView, self).get_form_kwargs()
-    #     print(kwargs)
-    #     kwargs['job'] = 1
-    #     return kwargs
 
     def form_valid(self, form):
         # check if user already applied

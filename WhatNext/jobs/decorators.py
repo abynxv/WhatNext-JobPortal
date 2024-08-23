@@ -15,7 +15,7 @@ def user_is_employer(function):
 def user_is_employee(function):
     def wrap(request, *args, **kwargs):
         user = request.user
-        if user.role == 'employee':
+        if user.role == 'candidate':
             return function(request, *args, **kwargs)
         else:
             raise PermissionDenied

@@ -9,22 +9,14 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
-    <!-- Bootstrap CSS-->
     <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
-    <!-- Font Awesome CSS (Remove if not needed)-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,700">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Montserrat:400,700">
-    <!-- Owl Carousel CSS -->
     <link rel="stylesheet" href="{% static 'vendor/owl.carousel/assets/owl.carousel.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/owl.carousel/assets/owl.theme.default.css' %}">
-    <!-- Theme Stylesheet -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}" id="theme-stylesheet">
-    <!-- Custom Stylesheet -->
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     {% block styles %}{% endblock %}
-    <!-- Favicon -->
     <link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
 </head>
 <body>
@@ -46,68 +38,72 @@
                     <!-- Home Link -->
                     <li class="nav-item active">
                         <a href="/" class="nav-link">Home <span class="sr-only">(current)</span></a>
-                    </li>
-
+                    </li>               
                     {% if request.user.is_authenticated %}
-                        {% if request.user.role == 'employer' %}
-                            <li class="nav-item dropdown">
-                                <a id="clientZone" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                   class="nav-link dropdown-toggle">
-                                   <div class="client-menu-image">
+                    {% if request.user.role == 'employer' %}
+                        <li class="nav-item dropdown">
+                            <a id="clientZone" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">
+                                <div class="client-menu-image">
                                     <div class="inner">
-                                        {% if user.logo %}
-                                            <img src="{{ user.logo.url }}" alt="Company Logo" class="img-fluid">
+                                        {% if request.user.employer_profile.logo %}
+                                            <img src="{{ request.user.employer_profile.logo.url }}" alt="Company Logo" class="img-fluid">
                                         {% else %}
                                             <img src="{% static 'img/Company-1-logo.png' %}" alt="Default Logo" class="img-fluid">
                                         {% endif %}
                                     </div>
                                 </div>
-                                    {{ request.user.first_name }}{% if request.user.role == 'employee' %} {{ request.user.last_name }}{% endif %}
-                                </a>
-                                <div aria-labelledby="clientZone" class="dropdown-menu">
-                                    <a href="{% url 'jobs:employer-dashboard' %}" class="dropdown-item">Dashboard</a>
-                                    <a href="{% url 'jobs:employer-all-applicants' %}" class="dropdown-item">Applicants</a>
-                                    <a href="{% url 'jobs:employer-jobs-create' %}" class="dropdown-item">Post a new job</a>
-                                    <a href="{% url 'jobs:employer-profile' %}" class="dropdown-item">View Profile</a>
-                                    <a href="{% url 'jobs:employer-edit-profile' %}" class="dropdown-item">Edit Profile</a>
-                                    <a href="{% url 'accounts:logout' %}" class="dropdown-item">Logout</a>
-                                </div>
-                            </li>
-                        {% elif request.user.role == 'employee' %}
-                            <li class="nav-item dropdown">
-                                <a id="clientZone" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                   class="nav-link dropdown-toggle">
-                                    <div class="client-menu-image">
-                                        <div class="inner">
-                                            <img src="{% static 'img/itsourcecodes.jpg' %}" alt="company image" class="img-fluid">
-                                        </div>
-                                    </div>
-                                    {{ request.user.first_name }} {{ request.user.last_name }}
-                                </a>
-                                <div aria-labelledby="clientZone" class="dropdown-menu">
-                                    <a href="{% url 'accounts:employer-profile-update' %}" class="dropdown-item">Edit Profile</a>
-                                    <a href="{% url 'accounts:logout' %}" class="dropdown-item">Logout</a>
-                                </div>
-                            </li>
-                        {% endif %}
-                    {% else %}
-                        <li class="nav-item dropdown">
-                            <a id="pages" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                               class="nav-link dropdown-toggle">
-                                Register
+                                {{ request.user.employer_profile.company_name }}
                             </a>
-                            <div aria-labelledby="pages" class="dropdown-menu">
-                                <a href="{% url 'accounts:employee-register' %}" class="dropdown-item">Candidate Sign-up</a>
-                                <a href="{% url 'accounts:employer-register' %}" class="dropdown-item">Employer Sign-up</a>
+                            <div aria-labelledby="clientZone" class="dropdown-menu">
+                                <a href="{% url 'jobs:employer-dashboard' %}" class="dropdown-item">Dashboard</a>
+                                <a href="{% url 'jobs:employer-all-applicants' %}" class="dropdown-item">Applicants</a>
+                                <a href="{% url 'jobs:employer-jobs-create' %}" class="dropdown-item">Post a new job</a>
+                                <a href="{% url 'jobs:employer-profile' %}" class="dropdown-item">View Profile</a>
+                                <a href="{% url 'jobs:employer-edit-profile' %}" class="dropdown-item">Edit Profile</a>
+                                <a href="{% url 'accounts:logout' %}" class="dropdown-item">Logout</a>
                             </div>
                         </li>
-                        <li class="nav-item">
-                            <a href="{% url 'accounts:login' %}" class="btn navbar-btn btn-outline-light mb-5 mb-lg-0">
-                                <i class="fa fa-sign-in"></i> Login
+                    {% elif request.user.role == 'candidate' %}
+                        <li class="nav-item dropdown">
+                            <a id="clientZone" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">
+                                <div class="client-menu-image">
+                                    <div class="inner">
+                                        {% if request.user.candidate_profile.profile_pic %}
+                                            <img src="{{ request.user.candidate_profile.profile_pic.url }}" alt="Employee image" class="img-fluid">
+                                        {% else %}
+                                            <img src="{% static 'img/default-candidate.jpg' %}" alt="Employee image" class="img-fluid">
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {{ request.user.candidate_profile.first_name }}
                             </a>
+                            <div aria-labelledby="clientZone" class="dropdown-menu">
+                                <a href="{% url 'accounts:candidate-profile' %}" class="dropdown-item">View Profile</a>
+                                <a href="{% url 'accounts:candidate-profile-edit' %}" class="dropdown-item">Edit Profile</a>
+                                <a href="{% url 'accounts:candidate-applications' %}" class="dropdown-item">Applications</a>
+                                <a href="{% url 'accounts:candidate-notifications' %}" class="dropdown-item">Notifications</a>
+                                <a href="{% url 'accounts:logout' %}" class="dropdown-item">Logout</a>
+                            </div>
                         </li>
-                    {% endif %}
-                </ul>
+                    {% endif %}                                                                   
+                {% else %}
+                    <li class="nav-item dropdown">
+                        <a id="pages" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           class="nav-link dropdown-toggle">
+                            Register
+                        </a>
+                        <div aria-labelledby="pages" class="dropdown-menu">
+                            <a href="{% url 'accounts:candidate-register' %}" class="dropdown-item">Candidate Sign-up</a>
+                            <a href="{% url 'accounts:employer-register' %}" class="dropdown-item">Employer Sign-up</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'accounts:login' %}" class="btn navbar-btn btn-outline-light mb-5 mb-lg-0">
+                            <i class="fa fa-sign-in"></i> Login
+                        </a>
+                    </li>
+                {% endif %} 
+                </ul>                
             </div>
         </div>
     </nav>

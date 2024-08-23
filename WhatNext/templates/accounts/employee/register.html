@@ -1,69 +1,81 @@
 {% extends 'base.html' %}
+
 {% block title %}
-    Employee Register
+    Candidate Register
 {% endblock %}
 
 {% block content %}
+    <div class="container">
+        <div class="col-lg-6 offset-lg-3">
+            <div class="box">
+                <h3 class="heading">Candidate Registration</h3>
+                <p class="lead">Create a new candidate account</p>
 
-    <div class="col-lg-6 offset-3">
-        <div class="box">
-            <h3 class="heading">New account</h3>
-            <p class="lead">Not our registered yet?</p>
-            {% if form.errors %}
-                {% for field in form %}
-                    {% for error in field.errors %}
+                {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissable">
+                        <strong>Please correct the errors below:</strong>
+                    </div>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger alert-dismissable">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
                         <div class="alert alert-danger alert-dismissable">
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                             <strong>{{ error|escape }}</strong>
                         </div>
                     {% endfor %}
-                {% endfor %}
-                {% for error in form.non_field_errors %}
-                    <div class="alert alert-danger alert-dismissable">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>{{ error|escape }}</strong>
+                {% endif %}
+
+                <form action="{% url 'accounts:candidate-register' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_first_name">First Name</label>
+                        {{ form.first_name }}
                     </div>
-                {% endfor %}
-            {% endif %}
-            <form action="" method="post">
-                {% csrf_token %}
-                {% for field in form %}
-                    {% if field.name == 'gender' %}
-
-                        <div class="form-group">
-                            <label for="gender">Gender</label>
-                            <br>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="male gender"
-                                       value="male">
-                                <label class="form-check-label" for="male">Male</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="female"
-                                       value="female">
-                                <label class="form-check-label" for="female">Female</label>
-                            </div>
-                        </div>
-
-                    {% else %}
-
-                        <div class="form-group">
-                            <label for="id_{{ field.name }}">{{ field.label }}</label>
-                            <input type="{{ field.field.widget.input_type }}"
-                                   class="form-control"
-                                   name="{{ field.name }}"
-                                   id="id_{{ field.name }}"
-                                   placeholder="{{ field.field.widget.attrs.placeholder }}">
-                        </div>
-
-                    {% endif %}
-                {% endfor %}
-                <div class="text-center">
-                    <button type="submit" class="btn btn-outline-white-primary"><i class="fa fa-user-md"></i> Register
-                    </button>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <label for="id_last_name">Last Name</label>
+                        {{ form.last_name }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_email">Email Address</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_password1">Password</label>
+                        {{ form.password1 }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_password2">Confirm Password</label>
+                        {{ form.password2 }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_gender">Gender</label>
+                        {{ form.gender }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_qualification">Qualification</label>
+                        {{ form.qualification }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_address">Address</label>
+                        {{ form.address }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_resume">Resume</label>
+                        {{ form.resume }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_resume">Profile Picture</label>
+                        {{ form.profile_pic }}
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-outline-primary">Register</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-
 {% endblock %}

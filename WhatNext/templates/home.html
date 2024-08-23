@@ -3,7 +3,6 @@
 {% block title %}
     WhatNext
 {% endblock %}
-
 {% block content %}
 
     <div id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
@@ -44,7 +43,7 @@
                 <div class="col-lg-10 mx-auto">
                     <div class="job-form-box">
                         <h2 class="heading">Unlock Your Future with WhatNext</h2>
-                        <form id="job-main-form" method="get" action="" class="job-main-form">
+                        <form id="job-main-form" method="get" action="{% url 'jobs:search' %}" class="job-main-form">
                             <div class="form-row">
                                 <div class="form-group">
                                     <input type="text" id="profession" name="position" placeholder="Position" class="form-control">
