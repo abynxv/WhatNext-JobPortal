@@ -1,11 +1,78 @@
 {% extends 'base.html' %}
+
 {% block title %}
     Applicants
 {% endblock %}
+
 {% load static %}
 
 {% block content %}
+<style>
+/* Apply general styling to the form */
+form {
+    margin: 20px;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
 
+/* Style for form group */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Style for labels */
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333; /* Ensure label text is visible */
+}
+
+/* Style for select dropdown */
+.form-control {
+    width: 100%;
+    padding: 10px 15px; /* Increase padding for better spacing */
+    border: 1px solid #ced4da; /* Lighter border color for better contrast */
+    border-radius: 4px;
+    font-size: 16px; /* Larger font size for readability */
+    color: #212529; /* Dark text color for better contrast */
+    background-color: #ffffff; /* White background for better contrast */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+}
+
+/* Ensure option text is clearly visible */
+.form-control option {
+    font-size: 16px; /* Ensure option text is readable */
+    color: #212529; /* Dark text color for better contrast */
+    background-color: #ffffff; /* White background for better contrast */
+}
+
+/* Style for submit button */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Ensure no unexpected border or padding issues */
+.form-control, .btn-primary {
+    box-sizing: border-box;
+}
+
+
+</style>
 <section class="bg-light-gray">
     <div class="container">
         <div class="row">
@@ -26,7 +93,7 @@
                     <h4>{{ applicant.user.candidate_profile.first_name }}</h4>
         
                     <!-- Display applicant's email -->
-                    <p><strong>Email: {{ applicant.user.email }}</strong></p>  
+                    <p><strong>Email: {{ applicant.user.email }}</strong></p>
                     
                     <!-- Display the job title the applicant applied for -->
                     <p><strong>Applied position: {{ applicant.job.title }}</strong></p>
@@ -41,7 +108,7 @@
                         <a href="{{ applicant.user.candidate_profile.resume.url }}" download="{{ applicant.user.candidate_profile.resume }}">
                             Download Resume
                         </a>
-                    </h4> 
+                    </h4>
         
                     <!-- Profile Picture -->
                     <div class="d-flex justify-content-between">
@@ -55,16 +122,33 @@
                             {% endif %}
                         </div>
                     </div>
+
+                    <!-- Status Dropdown and Action Buttons -->
+                    <div class="d-flex justify-content-between mt-3">
+                        <form method="post" action="{% url 'jobs:update_application_status' job.id applicant.id %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="status">Application Status:</label>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="applied" {% if applicant.status == 'applied' %}selected{% endif %}>Applied</option>
+                                    <option value="pending" {% if applicant.status == 'pending' %}selected{% endif %}>Pending</option>
+                                    <option value="shortlisted" {% if applicant.status == 'shortlisted' %}selected{% endif %}>Shortlisted</option>
+                                    <option value="rejected" {% if applicant.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm">Update Status</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        {% empty %}
+            {% empty %}
             <!-- Message if no applicants are found -->
             <div class="col-12">
                 <p>No applicants found.</p>
             </div>
-        {% endfor %}        
+            {% endfor %}
         </div>
-        
+
         <!-- Pagination -->
         {% if is_paginated %}
             <div class="row">
@@ -117,15 +201,7 @@
                     </nav>
                 </div>
             </div>
-        {% else %}
-            <div class="row">
-                <div class="col-12">
-                    <p>You are at the end of the list.</p>
-                </div>
-            </div>
         {% endif %}
     </div>
 </section>
-
-
 {% endblock %}

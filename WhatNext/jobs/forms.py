@@ -5,12 +5,10 @@ from jobs.models import Job, Applicant
 class CreateJobForm(forms.ModelForm):
     class Meta:
         model = Job
-        exclude = ('user', 'created_at', 'company_name', 'company_description', 'website', 'filled')
+        exclude = ('user', 'created_at', 'company_name', 'company_description', 'website')
 
     def is_valid(self):
         valid = super(CreateJobForm, self).is_valid()
-
-        # if already valid, then return True
         if valid:
             return valid
         return valid

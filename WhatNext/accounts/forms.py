@@ -199,14 +199,15 @@ class CandidateProfileForm(forms.ModelForm):
 class CandidateProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = CandidateProfile
-        fields = ['first_name', 'last_name', 'gender', 'qualification', 'address', 'resume']
+        fields = ['first_name', 'last_name', 'gender', 'qualification', 'address', 'resume', 'profile_pic']
         widgets = {
             'first_name': forms.TextInput(attrs={'placeholder': 'Enter First Name'}),
             'last_name': forms.TextInput(attrs={'placeholder': 'Enter Last Name'}),
             'gender': forms.Select(choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')]),
             'qualification': forms.TextInput(attrs={'placeholder': 'Enter Qualification'}),
             'address': forms.TextInput(attrs={'placeholder': 'Enter Address'}),
-            'resume': forms.FileInput(attrs={'class': 'form-control-file'}),  # Changed to FileInput
+            'resume': forms.FileInput(attrs={'class': 'form-control-file'}),
+            'profile_pic': forms.FileInput(attrs={'class': 'form-control-file'}),
         }
         labels = {
             'first_name': 'First Name',
@@ -215,6 +216,7 @@ class CandidateProfileUpdateForm(forms.ModelForm):
             'qualification': 'Qualification',
             'address': 'Address',
             'resume': 'Resume',
+            'profile_picture':'profile_pic'
         }
 
 
@@ -243,7 +245,7 @@ class EmployerProfileUpdateForm(forms.ModelForm):
             'company_name': forms.TextInput(attrs={'placeholder': 'Enter Company Name'}),
             'company_address': forms.TextInput(attrs={'placeholder': 'Enter Company Address'}),
             'website': forms.URLInput(attrs={'placeholder': 'Enter Website URL'}),
-            'logo': forms.ClearableFileInput(attrs={'placeholder': 'Upload Logo'}),
+            'logo': forms.FileInput(attrs={'class': 'form-control-file'}),
         }
         labels = {
             'company_name': 'Company Name',

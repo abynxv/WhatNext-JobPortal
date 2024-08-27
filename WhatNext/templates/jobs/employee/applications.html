@@ -1,98 +1,126 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block title %}My Applications{% endblock %}
-
 {% block content %}
 <style>
-    .applications-container {
-        max-width: 900px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .applications-container h2 {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    .application-list {
-        list-style-type: none;
-        padding: 0;
-    }
-    .application-item {
-        background-color: white;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-    }
-    .application-item h3 {
-        margin-top: 0;
-        color: #007bff;
-    }
-    .application-item p {
-        margin: 0.5rem 0;
-    }
-    .pagination {
-        display: flex;
-        justify-content: center;
-        list-style-type: none;
-        padding: 0;
-        margin-top: 2rem;
-    }
-    .pagination li {
-        margin: 0 0.5rem;
-    }
-    .pagination a {
-        display: block;
-        padding: 0.5rem 1rem;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: background-color 0.3s;
-    }
-    .pagination a:hover {
-        background-color: #0056b3;
-    }
+.applications-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.applications-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.application-list {
+    list-style-type: none;
+    padding: 0;
+}
+.application-item {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.application-item h3 {
+    margin-top: 0;
+    color: #007bff;
+}
+.application-item p {
+    margin: 0.5rem 0;
+}
+.delete-button {
+    background-color: #dc3545;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+.delete-button:hover {
+    background-color: #c82333;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+    margin-top: 2rem;
+}
+.pagination li {
+    margin: 0 0.5rem;
+}
+.pagination a {
+    display: block;
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+.pagination a:hover {
+    background-color: #0056b3;
+}
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-weight: bold;
+}
+.status-applied { background-color: #17a2b8; color: white; }
+.status-pending { background-color: #ffc107; color: black; }
+.status-shortlisted { background-color: #28a745; color: white; }
+.status-rejected { background-color: #dc3545; color: white; }
 </style>
-
 <div class="applications-container">
     <h2>My Applications</h2>
     {% if applications %}
-        <ul class="application-list">
-            {% for application in applications %}
-                <li class="application-item">
-                    <h3>{{ application.job.title }}</h3>
-                    <p><strong>Company:</strong> {{ application.job.user.employer_profile.company_name }}</p>
-                    <p><strong>Applied Date:</strong> {{ application.created_at|date:"M d, Y" }}</p>
-                    {% if application.status %}
-                        <p><strong>Status:</strong> {{ application.get_status_display }}</p>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-        {% if is_paginated %}
-            <ul class="pagination">
-                {% if page_obj.has_previous %}
-                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo; Previous</a></li>
-                {% endif %}
-                {% for i in paginator.page_range %}
-                    {% if page_obj.number == i %}
-                        <li class="active"><a href="#">{{ i }}</a></li>
-                    {% else %}
-                        <li><a href="?page={{ i }}">{{ i }}</a></li>
-                    {% endif %}
-                {% endfor %}
-                {% if page_obj.has_next %}
-                    <li><a href="?page={{ page_obj.next_page_number }}">Next &raquo;</a></li>
-                {% endif %}
-            </ul>
+    <ul class="application-list">
+        {% for application in applications %}
+        <li class="application-item">
+            <div>
+                <h3>{{ application.job.title }}</h3>
+                <p><strong>Company:</strong> {{ application.job.user.employer_profile.company_name }}</p>
+                <p><strong>Applied Date:</strong> {{ application.created_at|date:"M d, Y" }}</p>
+                <p><strong>Status:</strong> 
+                    <span class="status-badge status-{{ application.status }}">
+                        {{ application.get_status_display }}
+                    </span>
+                </p>
+            </div>
+            <div>
+                <a href="{% url 'accounts:delete_application' application.id %}" class="delete-button">Delete</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% if is_paginated %}
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li><a href="?page={{ page_obj.previous_page_number }}">&laquo; Previous</a></li>
         {% endif %}
+        {% for i in paginator.page_range %}
+        {% if page_obj.number == i %}
+        <li class="active"><a href="#">{{ i }}</a></li>
+        {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li><a href="?page={{ page_obj.next_page_number }}">Next &raquo;</a></li>
+        {% endif %}
+    </ul>
+    {% endif %}
     {% else %}
-        <p>You haven't applied to any jobs yet.</p>
+    <p>You haven't applied to any jobs yet.</p>
     {% endif %}
 </div>
 {% endblock %}

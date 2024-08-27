@@ -9,6 +9,8 @@ from jobs.forms import ApplyJobForm
 from jobs.models import Job, Applicant
 from django.shortcuts import redirect
 from django.urls import reverse
+from jobs.decorators import user_is_employee
+
 
 
 class HomeView(ListView):
@@ -25,19 +27,15 @@ class HomeView(ListView):
         return context
 
 
-from django.db.models import Q
-
-
 class SearchView(ListView):
     model = Job
     template_name = 'jobs/search.html'
     context_object_name = 'jobs'
-    paginate_by = 10  # Adjust the number of items per page as needed
+    paginate_by = 10
 
     def get_queryset(self):
         position = self.request.GET.get('position', '')
-        location = self.request.GET.get('location', '')
-        
+        location = self.request.GET.get('location', '')      
         queryset = self.model.objects.all()
         
         if position:
@@ -54,8 +52,7 @@ class JobListView(ListView):
     context_object_name = 'jobs'
     def get_queryset(self):
         return Job.objects.select_related('company').all()
-
-
+    
 
 class JobDetailsView(DetailView):
     model = Job
@@ -87,8 +84,9 @@ class ApplyJobView(CreateView):
     slug_url_kwarg = 'job_id'
 
     @method_decorator(login_required(login_url=reverse_lazy('accounts:login')))
+    @method_decorator(user_is_employee)
     def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(self.request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
@@ -102,12 +100,13 @@ class ApplyJobView(CreateView):
         return reverse_lazy('jobs:jobs-detail', kwargs={'id': self.kwargs['job_id']})
 
     def form_valid(self, form):
-        # check if user already applied
+        # Check if user already applied for the job
         applicant = Applicant.objects.filter(user_id=self.request.user.id, job_id=self.kwargs['job_id'])
-        if applicant:
-            messages.info(self.request, 'You already applied for this job')
+        if applicant.exists():
+            messages.info(self.request, 'You have already applied for this job.')
             return HttpResponseRedirect(self.get_success_url())
-        # save applicant
+        
+        # Save applicant
         form.instance.user = self.request.user
         form.save()
         return super().form_valid(form)

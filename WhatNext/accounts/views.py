@@ -1,17 +1,10 @@
 from django.contrib import messages, auth
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, FormView, RedirectView, UpdateView, DetailView, ListView
-from django.contrib.auth.decorators import login_required
-
+from django.http import HttpResponseRedirect
+from django.views.generic import CreateView, FormView, RedirectView
 from accounts.forms import CandidateRegistrationForm, EmployerRegistrationForm, UserLoginForm
-from accounts.models import User, CandidateProfile
-from jobs.models import Applicant
-from jobs.decorators import user_is_employee
+from accounts.models import User
 
-# Register Employee View
+
 class RegisterEmployeeView(CreateView):
     model = User
     form_class = CandidateRegistrationForm
@@ -35,7 +28,7 @@ class RegisterEmployeeView(CreateView):
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
 
-# Register Employer View
+
 class RegisterEmployerView(CreateView):
     model = User
     form_class = EmployerRegistrationForm
@@ -59,7 +52,7 @@ class RegisterEmployerView(CreateView):
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
 
-# Login View
+
 class LoginView(FormView):
     success_url = '/'
     form_class = UserLoginForm
@@ -83,10 +76,9 @@ class LoginView(FormView):
         messages.error(self.request, 'Invalid email or password.')
         return self.render_to_response(self.get_context_data(form=form))
 
-# Logout View
+
 class LogoutView(RedirectView):
     url = '/login'
-
     def get(self, request, *args, **kwargs):
         auth.logout(request)
         messages.success(request, 'You are now logged out')

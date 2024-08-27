@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+<style>
+    .delete-container {
+        max-width: 700px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border: 1px solid #dee2e6;
+    }
+
+    .delete-container h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+
+    .delete-container p {
+        text-align: center;
+        margin-bottom: 1rem;
+        color: #555;
+    }
+
+    .application-details {
+        background-color: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .application-details h3 {
+        margin-top: 0;
+        color: #007bff;
+    }
+
+    .application-details p {
+        margin: 0.5rem 0;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .btn-delete, .btn-cancel {
+        width: 150px; /* Ensures both buttons have the same width */
+        padding: 0.75rem;
+        border-radius: 4px;
+        font-size: 1rem;
+        text-align: center;
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .btn-delete {
+        background-color: #007bff;
+        border: 1px solid #007bff;
+    }
+
+    .btn-delete:hover {
+        background-color: #0056b3;
+        border-color: #004080;
+    }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        border: 1px solid #6c757d;
+    }
+
+    .btn-cancel:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+</style>
+
+<div class="delete-container">
+    <h2>Confirm Delete</h2>
+    <p>Are you sure you want to delete your application</p>
+    
+    <div class="application-details">
+        <h3>{{ application.job.title }}</h3>
+        <p><strong>Company:</strong> {{ application.job.user.employer_profile.company_name }}</p>
+        <p><strong>Applied Date:</strong> {{ application.created_at|date:"M d, Y" }}</p>
+    </div>
+    
+    <div class="buttons">
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-delete">Yes, Delete</button>
+        </form>
+        <a href="{% url 'accounts:candidate-applications' %}" class="btn-cancel">Cancel</a>
+    </div>
+</div>
+{% endblock %}

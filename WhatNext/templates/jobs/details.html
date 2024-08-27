@@ -1,12 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-    Job details
+    Job Details
 {% endblock %}
 
 {% block content %}
     <section class="bg-light-gray">
         <div class="container">
+            <div class="company-logo">
+                {% if job.user.employer_profile.logo.url %}
+                    <img src="{{ job.user.employer_profile.logo.url }}" alt="{{ job.user.employer_profile.company_name }} Logo">
+                {% else %}
+                    <img src="{% static 'img/default-logo.png' %}" alt="Default Logo">
+                {% endif %}
+                <h2>{{ job.user.employer_profile.company_name }}</h2>
+            </div>
             <h1 class="heading">
                 {{ job.title }}<br>
                 <small>at <a href="#">{{ job.user.employer_profile.company_name }}</a></small>
@@ -49,26 +57,12 @@
                             <form action="{% url 'jobs:apply-job' job.id %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="job" value="{{ job.id }}">
-                                <input type="submit" class="btn btn-success" value="Apply for this job"/>
                             </form>
                         {% endif %}
                     </div>
                 </div>
                 <div class="col-lg-1"></div>
                 <div class="col-lg-3">
-                    <h4>About {{ job.user.employer_profile.company_name }}</h4>
-                    <p class="job-detail__company-description">{{ job.company_description }}</p>
-                    <p class="job-detail__social social social--outline">
-                        <a href="{{ job.website }}" data-toggle="tooltip" data-placement="top" title="Website" class="link">
-                            <i class="fa fa-link"></i>
-                        </a>
-                        <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter" class="twitter">
-                            <i class="fa fa-twitter"></i>
-                        </a>
-                        <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook" class="facebook">
-                            <i class="fa fa-facebook"></i>
-                        </a>
-                    </p>
                     <div class="job-detail__apply-top">
                         {% if is_applied %}
                             <input type="button" class="btn btn-outline-white-primary" value="Already applied"/>
@@ -76,7 +70,6 @@
                             <form action="{% url 'jobs:apply-job' job.id %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="job" value="{{ job.id }}">
-                                <input type="submit" class="btn btn-success" value="Apply for this job"/>
                             </form>
                         {% endif %}
                     </div>

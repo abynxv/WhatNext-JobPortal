@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Reject Applicant
+{% endblock %}
+
+{% block content %}
+<section class="bg-light-gray">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h4 class="heading">Reject Application</h4>
+                <p>Are you sure you want to reject the application of <strong>{{ applicant.user.candidate_profile.first_name }} {{ applicant.user.candidate_profile.last_name }}</strong> for the <strong>{{ job.title }}</strong> position?</p>
+                
+                <form method="post" action="{% url 'jobs:reject_application' job.id applicant.id %}">
+                    {% csrf_token %}
+                    <a href="{% url 'jobs:employer-applicants' job.id %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-danger">Reject Application</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
