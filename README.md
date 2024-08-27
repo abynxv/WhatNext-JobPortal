@@ -44,30 +44,36 @@ The project consists of two main Django apps:
 
 ## API Endpoints
 
-### Jobs App
-
-- Home: `GET /`
-- Search: `GET /search`
-- Employer Dashboard: `GET /employer/dashboard`
-- All Applicants: `GET /employer/dashboard/all-applicants`
-- Applicants per Job: `GET /employer/dashboard/applicants/<int:job_id>`
-- Mark Job as Filled: `GET /employer/dashboard/mark-filled/<int:job_id>`
-- Edit Job: `GET, POST /employer/dashboard/edit/<int:pk>`
-- Delete Job: `GET, POST /employer/dashboard/delete/<int:pk>`
-- Apply for Job: `GET, POST /apply-job/<int:job_id>`
-- Job List: `GET /jobs`
-- Job Details: `GET /jobs/<int:id>`
-- Create Job: `GET, POST /employer/jobs/create`
-- Employer Profile: `GET /employer/profile/`
-- Edit Employer Profile: `GET, POST /employer/edit-profile/`
+### Main URLs
+- `/admin/`: Django admin interface
+- All other routes are included from the `jobs` and `accounts` apps
 
 ### Accounts App
+- `/employer/register`: Register a new employer account
+- `/candidate/register`: Register a new candidate account
+- `/candidate/profile`: View candidate profile
+- `/candidate/profile/edit`: Edit candidate profile
+- `/candidate/applications`: View candidate's job applications
+- `/candidate/applications/delete/<int:pk>/`: Delete a specific job application
+- `/logout`: Log out the current user
+- `/login`: Log in a user
 
-- Employee Registration: `GET, POST /employee/register`
-- Employer Registration: `GET, POST /employer/register`
-- Update Employee Profile: `GET, POST /employee/profile/update`
-- Logout: `GET /logout`
-- Login: `GET, POST /login`
+### Jobs App
+- `/`: Home page
+- `/search`: Search for jobs
+- `/employer/dashboard/`: Employer dashboard
+- `/employer/dashboard/all-applicants`: View all applicants
+- `/employer/dashboard/applicants/<int:job_id>`: View applicants for a specific job
+- `/employer/dashboard/edit/<int:pk>`: Edit a job posting
+- `/employer/dashboard/delete/<int:pk>`: Delete a job posting
+- `/employer/dashboard/job/<int:job_id>/applicant/<int:applicant_id>/update-status/`: Update application status
+- `/apply-job/<int:job_id>`: Apply for a job
+- `/jobs`: List all jobs
+- `/jobs/<int:id>`: View details of a specific job
+- `/employer/jobs/create`: Create a new job posting
+- `/employer/profile/`: View employer profile
+- `/employer/edit-profile/`: Edit employer profile
+
 
 ## Usage
 
@@ -82,13 +88,19 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## Screenshots
 
-![Project Image - 01](https://github.com/user-attachments/assets/c8daedc8-c5cc-4b08-a4d6-ef41e0f3d485)
-![Project Image - 02](https://github.com/user-attachments/assets/a0c50537-405d-4ddf-a9e7-3d0878bf6ec7)
-![Project Image - 03](https://github.com/user-attachments/assets/e52b1e29-04c1-41a4-9a37-9c8d5055a607)
-![Project Image - 04](https://github.com/user-attachments/assets/99655554-8daf-4aaf-bc78-ad1ac5aded58)
-![Project Image - 05](https://github.com/user-attachments/assets/a62bd6aa-969e-4aac-be89-ba7db8e96364)
-![Project Image - 06](https://github.com/user-attachments/assets/7b02b012-f8d4-4bc3-9132-89b0f77332ef)
-![Project Image - 07](https://github.com/user-attachments/assets/6a136ae8-8710-4694-a378-0ed093464b0b)
+![Project - Image 01](https://github.com/user-attachments/assets/2aea055e-1f1b-4fe9-844a-8b16f2d614d4)
+![Project - Image 02](https://github.com/user-attachments/assets/4a09661a-9c05-46c9-aacd-dcf0430b1459)
+![Project - Image 03](https://github.com/user-attachments/assets/a04028b1-3720-4c44-a6ba-c74e6ebbec56)
+![Project - Image 04](https://github.com/user-attachments/assets/a5981d0e-303a-4761-a24e-0ded028b3cb3)
+![Project - Image 05](https://github.com/user-attachments/assets/41404507-6dad-480c-b52a-b82dbe73bc18)
+![Project - Image 06](https://github.com/user-attachments/assets/c76f483f-7a42-47ee-a4b8-28ffc034d4e9)
+![Project - Image 07](https://github.com/user-attachments/assets/46785a5f-1763-4005-8759-079ea5ec9bb7)
+![Project - Image 08](https://github.com/user-attachments/assets/34a9cb95-70e9-4ca0-9567-8c183a43e09f)
+![Project - Image 09](https://github.com/user-attachments/assets/d379b057-4d70-4d23-8637-167db6ff2bc3)
+![Project - Image 10](https://github.com/user-attachments/assets/f7380f7f-ecc8-44ee-8b08-13da878d8a7c)
+
+
+
 
 ## License
 
