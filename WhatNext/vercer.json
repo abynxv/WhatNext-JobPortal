@@ -1,7 +1,7 @@
 {
     "builds": [
         {
-            "src": "host/wsgi.py",
+            "src": "WhatNext/wsgi.py",
             "use": "@vercel/python",
             "config": {
                 "maxLambdaSize": "100mb",
@@ -13,7 +13,7 @@
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "host/wsgi.py"
+            "dest": "WhatNext/wsgi.py"
         }
     ]
 }
